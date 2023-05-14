@@ -1,0 +1,74 @@
+
+import gurobi.*;
+
+
+// This class will contain your callback
+public class Tsp extends GRBCallback {
+  private GRBVar[][] xvars;
+
+  // callback constructor
+  public Tsp(GRBVar[][] x) {
+    xvars = x;
+  }
+
+  // callback procedure
+  protected void callback() {
+    try {
+      // this tells Gurobi to stop when it finds an integer solution
+      if (where == GRB.CB_MIPSOL) {
+
+        ///////////////////////////
+        //
+        // Here goes your DFS code for finding connected components
+        // use edges to construct the adjacency lists
+        //
+        ///////////////////////////
+        if ('<here goes your statement that test whether there are subtours>'){}
+          // add subtour elimination constraints for every pair of nodes in the
+          // connected components you found. For each component add the cut
+          // like so.
+          addLazy(<'here goes the constraint'>);
+        }
+      }
+    } catch (GRBException e) {
+      System.out.println("Error code: " + e.getErrorCode() + ". " +
+          e.getMessage());
+      e.printStackTrace();
+    }
+  }
+
+    public static void main(String[] args) {
+
+
+    // here goes the code to read the data
+
+    try {
+      GRBEnv   env   = new GRBEnv();
+      GRBModel model = new GRBModel(env);
+
+      // Must set LazyConstraints parameter when using lazy constraints
+
+      model.set(GRB.IntParam.LazyConstraints, 1);
+
+      // create the variables
+      GRBVar[][] x = new GRBVar[n][n];
+
+      // ad constraints
+      model.addConstr('<define the constraints>');
+      }
+      // this tells your model to use your callback
+      model.setCallback(new Tsp(x));
+      model.optimize();
+
+      // print your solution
+
+      model.dispose();
+      env.dispose();
+
+    } catch (GRBException e) {
+      System.out.println("Error code: " + e.getErrorCode() + ". " +
+          e.getMessage());
+      e.printStackTrace();
+    }
+  }
+}
